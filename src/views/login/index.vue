@@ -51,8 +51,9 @@
 <script setup>
 import { reactive, ref, computed } from 'vue'
 import { validatePassword } from './rules'
+import { useStore } from 'vuex'
 
-const LoginForm = ref()
+const LoginForm = ref(null)
 const inputType = ref('password')
 const loginForm = reactive({
   username: '',
@@ -83,13 +84,14 @@ const loginRules = reactive({
 const handlePassWordStatus = () => {
   inputType.value = inputType.value === 'password' ? 'text' : 'password'
 }
+const store = useStore()
 // 登录
-const handleLoginSubmit = async () => {
-  await LoginForm.value.validate((valid) => {
+const handleLoginSubmit = () => {
+  LoginForm.value.validate(async (valid) => {
     if (!valid) return
-    if (valid) {
-      alert('登录')
-    }
+    console.log(loginForm)
+    const res = await store.dispatch('handleLoginSubmit', loginForm)
+    console.log(res)
   })
 }
 </script>
