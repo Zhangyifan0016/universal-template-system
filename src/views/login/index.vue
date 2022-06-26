@@ -8,12 +8,35 @@
     >
       <div class="title-container">
         <h3 class="title">用户登录</h3>
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="国际化"
+          placement="bottom"
+        >
+          <svg-icon className="svg-language" icon="language"></svg-icon>
+        </el-tooltip>
       </div>
       <el-form-item prop="username">
+        <span class="svg-container">
+          <el-icon>
+            <svg-icon icon="user"></svg-icon>
+          </el-icon>
+        </span>
         <el-input v-model="loginForm.username"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" v-model="loginForm.password"></el-input>
+        <span class="svg-container">
+          <el-icon>
+            <svg-icon icon="password"></svg-icon>
+          </el-icon>
+        </span>
+        <el-input :type="inputType" v-model="loginForm.password"></el-input>
+        <span class="svg-pwd" @click="handlePassWordStatus">
+          <el-icon>
+            <svg-icon :icon="passwordIconStatus"></svg-icon>
+          </el-icon>
+        </span>
       </el-form-item>
       <el-button
         class="login-button"
@@ -26,13 +49,18 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { validatePassword } from './rules'
 
 const LoginForm = ref()
+const inputType = ref('password')
 const loginForm = reactive({
   username: '',
   password: ''
+})
+// show password
+const passwordIconStatus = computed(() => {
+  return inputType.value === 'password' ? 'eye' : 'eye-open'
 })
 // 校验规则
 const loginRules = reactive({
@@ -51,6 +79,10 @@ const loginRules = reactive({
     }
   ]
 })
+// 切换密码框眼睛状态
+const handlePassWordStatus = () => {
+  inputType.value = inputType.value === 'password' ? 'text' : 'password'
+}
 // 登录
 const handleLoginSubmit = async () => {
   await LoginForm.value.validate((valid) => {
@@ -84,6 +116,23 @@ $cursor: #fff;
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
+
+      .svg-container {
+        padding: 10px 5px 6px 15px;
+        color: $dark_gray;
+        vertical-align: middle;
+        display: inline-block;
+      }
+
+      .svg-pwd {
+        position: absolute;
+        right: 10px;
+        top: 11px;
+        font-size: 16px;
+        color: $dark_gray;
+        cursor: pointer;
+        user-select: none;
+      }
     }
 
     :deep(.el-input) {
@@ -118,7 +167,18 @@ $cursor: #fff;
         text-align: center;
         font-weight: bold;
       }
+      :deep(.svg-language) {
+        position: absolute;
+        top: 4px;
+        right: 0;
+        background-color: #fff;
+        font-size: 22px;
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
     }
+
     .login-button {
       width: 100%;
       margin-bottom: 30px;
