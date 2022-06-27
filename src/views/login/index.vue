@@ -95,8 +95,7 @@ const handleLoginSubmit = () => {
     if (valid) {
       const newLoginForm = util.deepCopy(loginForm)
       newLoginForm.password = md5(newLoginForm.password)
-      console.log(newLoginForm)
-      const res = await store.dispatch('handleLoginSubmit', newLoginForm)
+      const res = await store.dispatch('user/login', newLoginForm)
       console.log(res)
     }
   })
