@@ -4,6 +4,9 @@ import axios from 'axios'
 // 引入md5
 import md5 from 'md5'
 
+// 引入loading加载
+import loading from '../utils/loading'
+
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -16,6 +19,8 @@ instance.interceptors.request.use(
     // if (token) {
     //   config.headers.authorization = 'Bearer ' + token
     // }
+    // 开启loading加载
+    loading.open()
     // md5
     const { icode, time } = getTestICode()
     config.headers.icode = icode
@@ -25,6 +30,8 @@ instance.interceptors.request.use(
     return config
   },
   (err) => {
+    // 关闭loading加载
+    loading.close()
     return Promise.reject(err)
   }
 )
@@ -32,12 +39,16 @@ instance.interceptors.request.use(
 // 响应拦截
 instance.interceptors.response.use(
   (res) => {
+    // 关闭loading加载
+    loading.close()
     // console.log(res);
     // 后端响应的数据
     return res
     // 请求成功的处理
   },
   (err) => {
+    // 关闭loading加载
+    loading.close()
     return Promise.reject(err)
   }
 )
