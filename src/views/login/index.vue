@@ -52,6 +52,9 @@
 import { reactive, ref, computed } from 'vue'
 import { validatePassword } from './rules'
 import { useStore } from 'vuex'
+// 引入md5
+import md5 from 'md5'
+import util from '../../utils/util'
 
 const LoginForm = ref(null)
 const inputType = ref('password')
@@ -89,9 +92,13 @@ const store = useStore()
 const handleLoginSubmit = () => {
   LoginForm.value.validate(async (valid) => {
     if (!valid) return
-    console.log(loginForm)
-    const res = await store.dispatch('handleLoginSubmit', loginForm)
-    console.log(res)
+    if (valid) {
+      const newLoginForm = util.deepCopy(loginForm)
+      newLoginForm.password = md5(newLoginForm.password)
+      console.log(newLoginForm)
+      const res = await store.dispatch('handleLoginSubmit', newLoginForm)
+      console.log(res)
+    }
   })
 }
 </script>
