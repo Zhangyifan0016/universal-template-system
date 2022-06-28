@@ -3,7 +3,7 @@ import { setItem, getItem } from '../../utils/storage'
 export default {
   namespaced: true,
   state: () => ({
-    token: getItem() || ''
+    token: getItem('token') || ''
   }),
   mutations: {
     setToken(state, token) {

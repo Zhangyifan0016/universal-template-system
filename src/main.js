@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css'
 // 导入全局样式
 import './styles/index.scss'
 import installIcons from './icons/index.js'
+// 引入页面鉴权
+import './permission'
 
 const app = createApp(App)
 installIcons(app)
