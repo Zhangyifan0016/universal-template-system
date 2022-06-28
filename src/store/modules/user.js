@@ -1,14 +1,26 @@
 import UserApi from '../../api/user'
+import { setItem, getItem } from '../../utils/storage'
 export default {
   namespaced: true,
   state: () => ({
-    token: ''
+    token: getItem() || ''
   }),
-  mutations: {},
+  mutations: {
+    setToken(state, token) {
+      state.token = token
+      setItem('token', token)
+    }
+  },
   actions: {
     async login({ commit }, payload) {
-      const res = await UserApi.login(payload)
-      return res
+      try {
+        const res = await UserApi.login(payload)
+        commit('setToken', res.token)
+        console.log(res)
+        return res
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

@@ -7,6 +7,9 @@ import md5 from 'md5'
 // 引入loading加载
 import loading from '../utils/loading'
 
+// 引入vuex
+import store from '../store'
+
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -15,10 +18,10 @@ const instance = axios.create({
 // 请求拦截
 instance.interceptors.request.use(
   (config) => {
-    // const token = store.state.token
-    // if (token) {
-    //   config.headers.authorization = 'Bearer ' + token
-    // }
+    const token = store.getters.token
+    if (token) {
+      config.headers.authorization = 'Bearer ' + token
+    }
     // 开启loading加载
     loading.open()
     // md5
@@ -41,9 +44,13 @@ instance.interceptors.response.use(
   (res) => {
     // 关闭loading加载
     loading.close()
-    // console.log(res);
-    // 后端响应的数据
-    return res
+    // 全局响应处理
+    const { success, data } = res.data
+    if (success) {
+      return data
+    } else {
+      // return Promise.reject()
+    }
     // 请求成功的处理
   },
   (err) => {

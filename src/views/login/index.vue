@@ -52,6 +52,9 @@
 import { reactive, ref, computed } from 'vue'
 import { validatePassword } from './rules'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+// 引入消息提示
+import { ElMessage } from 'element-plus'
 // 引入md5
 import md5 from 'md5'
 import util from '../../utils/util'
@@ -88,6 +91,8 @@ const handlePassWordStatus = () => {
   inputType.value = inputType.value === 'password' ? 'text' : 'password'
 }
 const store = useStore()
+
+const router = useRouter()
 // 登录
 const handleLoginSubmit = () => {
   LoginForm.value.validate(async (valid) => {
@@ -97,6 +102,12 @@ const handleLoginSubmit = () => {
       newLoginForm.password = md5(newLoginForm.password)
       const res = await store.dispatch('user/login', newLoginForm)
       console.log(res)
+      if (!res.token) return
+      router.push('/')
+      ElMessage({
+        type: 'success',
+        message: '登陆成功'
+      })
     }
   })
 }
