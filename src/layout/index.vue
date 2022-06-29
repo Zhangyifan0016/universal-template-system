@@ -1,11 +1,17 @@
 <template>
-  <div>
-    <!-- 顶部 -->
-    <app-navbar></app-navbar>
+  <div class="app-wrapper">
     <!-- 侧边栏 -->
-    <app-menu></app-menu>
-    <!-- 主体内容 -->
-    <app-main></app-main>
+    <app-menu class="sidebar-container"></app-menu>
+    <div class="main-container">
+      <div class="fixed-header">
+        <!-- 顶部 -->
+        <app-navbar></app-navbar>
+        <!-- tagsview -->
+        <tags-view></tags-view>
+      </div>
+      <!-- 主体内容 -->
+      <app-main></app-main>
+    </div>
   </div>
 </template>
 
@@ -14,34 +20,44 @@ import {} from 'vue'
 import AppMenu from './AppMenu/index.vue'
 import AppNavbar from './AppNavbar/index.vue'
 import AppMain from './AppMain/index.vue'
+import TagsView from '../components/TagsView'
 </script>
 <style lang="scss" scoped>
-.navbar {
-  height: 50px;
-  position: absolute;
-  left: 210px;
-  top: 0;
-  right: 0;
-  background-color: #ffffff;
-  line-height: 50px;
-  box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+.app-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  .sidebar-container {
+    // transition: width 0.28s;
+    width: 210px;
+    height: 100%;
+    position: fixed;
+    background-color: #304156;
+    overflow-y: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+    z-index: 1001;
+    // overflow: hidden;
+  }
+  .main-container {
+    min-height: 100%;
+    // transition: margin-left 0.28s;
+    margin-left: 210px;
+    position: relative;
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 9;
+      width: calc(100% - 210px);
+      transition: width 0.28s;
+    }
+  }
 }
-.app-menu {
-  width: 210px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  overflow: auto;
-  background-color: rgb(48, 65, 86);
-}
-.main {
-  position: absolute;
-  left: 210px;
-  right: 0;
-  top: 82px;
-  bottom: 0;
-  overflow: auto;
-  padding: 20px;
+::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 </style>
