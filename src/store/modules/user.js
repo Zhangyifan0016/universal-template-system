@@ -1,5 +1,7 @@
 import UserApi from '../../api/user'
-import { setItem, getItem, removeItem } from '../../utils/storage'
+import { setItem, getItem, removeAllItem } from '../../utils/storage'
+import { setTimeStamp } from '../../utils/auth'
+
 export default {
   namespaced: true,
   state: () => ({
@@ -11,6 +13,7 @@ export default {
     setToken(state, token) {
       state.token = token
       setItem('token', token)
+      setTimeStamp()
     },
     // 存储用户信息
     setUserInfo(state, userInfo) {
@@ -44,8 +47,10 @@ export default {
     logout({ commit }) {
       commit('setToken', '')
       commit('setUserInfo', '')
-      removeItem('token')
-      removeItem('userInfo')
+      // removeItem('token')
+      // removeItem('userInfo')
+      // removeItem('timeStamp')
+      removeAllItem()
     }
   }
 }

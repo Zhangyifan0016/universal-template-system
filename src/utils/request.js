@@ -10,6 +10,12 @@ import loading from '../utils/loading'
 // 引入vuex
 import store from '../store'
 
+import { ElMessage } from 'element-plus'
+
+import router from '../router'
+
+import { isCheckTimeout } from './auth'
+
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -18,18 +24,23 @@ const instance = axios.create({
 // 请求拦截
 instance.interceptors.request.use(
   (config) => {
-    const token = store.getters.token
-    if (token) {
-      config.headers.authorization = 'Bearer ' + token
-    }
     // 开启loading加载
     loading.open()
-    // md5
+
+    // md5 调用接口要传的参数
     const { icode, time } = getTestICode()
     config.headers.icode = icode
     config.headers.codeType = time
+    const token = store.getters.token
 
-    console.log('拦截成功')
+    if (token) {
+      if (isCheckTimeout()) {
+        store.dispatch('user/logout')
+        router.push('/login')
+        return Promise.reject(new Error('token 失效'))
+      }
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (err) => {
@@ -45,17 +56,26 @@ instance.interceptors.response.use(
     // 关闭loading加载
     loading.close()
     // 全局响应处理
-    const { success, data } = res.data
+    const { success, data, message } = res.data
     if (success) {
       return data
     } else {
-      // return Promise.reject()
+      _showError(message)
+      return Promise.reject(new Error(message))
     }
     // 请求成功的处理
   },
   (err) => {
     // 关闭loading加载
     loading.close()
+    if (err.response && err.response.data && err.response.data.code === 401) {
+      store.dispatch('user/logout')
+      router.push('/login')
+    }
+
+    // 响应失败进行信息提示
+    _showError(err.message)
+
     return Promise.reject(err)
   }
 )
@@ -67,6 +87,12 @@ function getTestICode() {
     icode: md5(code),
     time: now
   }
+}
+
+// 响应提示信息
+const _showError = (message) => {
+  const info = message || '发生未知错误'
+  ElMessage.error(info)
 }
 
 // 封装 处理get请求方式的参数问题
