@@ -3,12 +3,19 @@ import { setItem, getItem } from '../../utils/storage'
 export default {
   namespaced: true,
   state: () => ({
-    token: getItem('token') || ''
+    token: getItem('token') || '',
+    userInfo: getItem('userInfo') || ''
   }),
   mutations: {
+    // 存储token
     setToken(state, token) {
       state.token = token
       setItem('token', token)
+    },
+    // 存储用户信息
+    setUserInfo(state, userInfo) {
+      state.userInfo = userInfo
+      setItem('userInfo', userInfo)
     }
   },
   actions: {
@@ -17,6 +24,15 @@ export default {
         const res = await UserApi.login(payload)
         commit('setToken', res.token)
         console.log(res)
+        return res
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getUserInfo({ commit }) {
+      try {
+        const res = await UserApi.getUserInfo()
+        commit('setUserInfo', res)
         return res
       } catch (error) {
         console.log(error)
