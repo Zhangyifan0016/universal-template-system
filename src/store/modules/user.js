@@ -1,5 +1,5 @@
 import UserApi from '../../api/user'
-import { setItem, getItem } from '../../utils/storage'
+import { setItem, getItem, removeItem } from '../../utils/storage'
 export default {
   namespaced: true,
   state: () => ({
@@ -19,6 +19,7 @@ export default {
     }
   },
   actions: {
+    // 登录
     async login({ commit }, payload) {
       try {
         const res = await UserApi.login(payload)
@@ -29,6 +30,7 @@ export default {
         console.log(error)
       }
     },
+    // 获取用户信息
     async getUserInfo({ commit }) {
       try {
         const res = await UserApi.getUserInfo()
@@ -37,6 +39,13 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // 退出登录
+    logout({ commit }) {
+      commit('setToken', '')
+      commit('setUserInfo', '')
+      removeItem('token')
+      removeItem('userInfo')
     }
   }
 }
