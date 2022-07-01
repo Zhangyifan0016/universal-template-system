@@ -9,23 +9,29 @@ const whiteList = ['/login']
 router.beforeEach(async (to, from, next) => {
   // 获取token
   const token = store.getters.token
-  // 获取用户信息
-  const userInfo = store.getters.userInfo
   if (token) {
     if (to.path === '/login') {
       next(from.path)
     } else {
-      // next()
-      if (userInfo) {
-        next()
-      } else {
+      if (!store.getters.hasUserInfo) {
+        // 调取用户信息接口
         const res = await store.dispatch('user/getUserInfo')
         if (res) {
-          next()
+          // 获取用户所拥有的路由权限
+          const { permission } = res
+          const filterRoutes = await store.dispatch(
+            'permission/filterRoutes',
+            permission.menus
+          )
+          filterRoutes.forEach((item) => {
+            router.addRoute(item)
+          })
+          return next(to.path)
         } else {
           next('/login')
         }
       }
+      next()
     }
   } else {
     if (whiteList.includes(to.path)) {

@@ -1,13 +1,14 @@
 import UserApi from '../../api/user'
 import { setItem, getItem, removeAllItem } from '../../utils/storage'
 import { setTimeStamp } from '../../utils/auth'
+import { resetRouter } from '../../utils/removeRouter'
 
 export default {
   namespaced: true,
-  state: () => ({
+  state: {
     token: getItem('token') || '',
-    userInfo: getItem('userInfo') || ''
-  }),
+    userInfo: {}
+  },
   mutations: {
     // 存储token
     setToken(state, token) {
@@ -18,7 +19,6 @@ export default {
     // 存储用户信息
     setUserInfo(state, userInfo) {
       state.userInfo = userInfo
-      setItem('userInfo', userInfo)
     }
   },
   actions: {
@@ -27,7 +27,6 @@ export default {
       try {
         const res = await UserApi.login(payload)
         commit('setToken', res.token)
-        console.log(res)
         return res
       } catch (error) {
         console.log(error)
@@ -45,8 +44,9 @@ export default {
     },
     // 退出登录
     logout({ commit }) {
+      resetRouter()
       commit('setToken', '')
-      commit('setUserInfo', '')
+      commit('setUserInfo', {})
       // removeItem('token')
       // removeItem('userInfo')
       // removeItem('timeStamp')

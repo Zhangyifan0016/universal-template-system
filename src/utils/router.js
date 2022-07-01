@@ -33,16 +33,18 @@ const isNull = (data) => {
 export const generateMenus = (routes) => {
   const result = []
   routes.forEach((item) => {
+    // 过滤掉登录路由
     if (isNull(item.meta) && isNull(item.children)) return
 
     if (isNull(item.meta) && !isNull(item.children)) {
       result.push(...generateMenus(item.children))
       return
     }
+    console.log(item)
 
     const routePath = item.path
-    let route = result.find((item) => item.path === routePath)
 
+    let route = result.find((route) => route.path === routePath)
     if (!route) {
       route = {
         ...item,
@@ -58,5 +60,6 @@ export const generateMenus = (routes) => {
       route.children.push(...generateMenus(item.children))
     }
   })
+  console.log(result)
   return result
 }
