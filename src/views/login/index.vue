@@ -62,8 +62,8 @@ import util from '../../utils/util'
 const LoginForm = ref(null)
 const inputType = ref('password')
 const loginForm = reactive({
-  username: '',
-  password: ''
+  username: 'admin',
+  password: '123456'
 })
 // show password
 const passwordIconStatus = computed(() => {

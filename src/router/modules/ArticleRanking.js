@@ -4,6 +4,7 @@ export default {
   path: '/article',
   component: Layout,
   name: 'articleRanking',
+  redirect: '/article/ranking',
   meta: {
     title: '文章',
     icon: 'article'

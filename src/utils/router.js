@@ -13,7 +13,6 @@ const getChildrenRoutes = (routes) => {
 export const filterRoutes = (routes) => {
   // 所有的非一级路由 所有子路由
   const childrenRoutes = getChildrenRoutes(routes)
-  console.log(childrenRoutes)
   // 筛选出一级路由
   return routes.filter((route) => {
     return !childrenRoutes.find((childrenRoute) => {
@@ -40,8 +39,6 @@ export const generateMenus = (routes) => {
       result.push(...generateMenus(item.children))
       return
     }
-    console.log(item)
-
     const routePath = item.path
 
     let route = result.find((route) => route.path === routePath)
@@ -56,6 +53,7 @@ export const generateMenus = (routes) => {
         result.push(route)
       }
     }
+
     if (item.children) {
       route.children.push(...generateMenus(item.children))
     }
