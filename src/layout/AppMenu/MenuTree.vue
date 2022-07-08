@@ -19,9 +19,7 @@ import { filterRoutes, generateMenus } from '../../utils/router'
 const router = useRouter()
 
 const menuList = computed(() => {
-  console.log(router.getRoutes())
   const routes = filterRoutes(router.getRoutes())
-  console.log(routes)
   return filterMenuData(generateMenus(routes))
 })
 </script>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1>员工管理</h1>
+    <el-card class="box-card">
+      <div class="">
+        <el-button type="primary">excel导入</el-button>
+        <el-button type="success">excel导出</el-button>
+      </div>
+    </el-card>
   </div>
 </template>
 <script setup>

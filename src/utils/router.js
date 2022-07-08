@@ -6,6 +6,7 @@ const getChildrenRoutes = (routes) => {
       result.push(...item.children)
     }
   })
+  console.log(result)
   return result
 }
 
@@ -30,6 +31,7 @@ const isNull = (data) => {
 }
 
 export const generateMenus = (routes) => {
+  console.log(routes)
   const result = []
   routes.forEach((item) => {
     // 过滤掉登录路由
@@ -42,12 +44,19 @@ export const generateMenus = (routes) => {
     const routePath = item.path
 
     let route = result.find((route) => route.path === routePath)
+
+    console.log(item.path)
+    console.log(routePath)
     if (!route) {
       route = {
         ...item,
         path: routePath,
         children: []
       }
+      console.log(item)
+      console.log(item.children)
+
+      console.log(route.children)
 
       if (item.meta.title && item.meta.icon) {
         result.push(route)
